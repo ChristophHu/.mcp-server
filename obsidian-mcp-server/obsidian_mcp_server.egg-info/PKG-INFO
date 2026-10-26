@@ -1,0 +1,62 @@
+Metadata-Version: 2.4
+Name: obsidian-mcp-server
+Version: 0.1.0
+Summary: Lightweight Python MCP server for Obsidian via Local REST API
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+Requires-Dist: httpx<0.29,>=0.28
+Requires-Dist: mcp==2.3.0
+Requires-Dist: PyYAML<7,>=6.0
+
+# Obsidian MCP Server
+
+Leichtgewichtiger Python-MCP-Server für Obsidian über das Plugin „Local REST API“.
+
+## Voraussetzungen
+
+- Python 3.11 oder neuer (empfohlen: Python 3.12)
+- uv
+- Obsidian mit installiertem und aktiviertem Local REST API Plugin
+- API-Key aus den Plugin-Einstellungen
+
+## Konfiguration
+
+```sh
+export OBSIDIAN_API_URL="https://127.0.0.1:27124"
+export OBSIDIAN_API_KEY="<dein-plugin-api-key>"
+uv sync
+uv run obsidian-mcp-server
+```
+
+Die URL kann das HTTP- oder HTTPS-Endpunkt des Local REST API Plugins sein. TLS-Zertifikate werden standardmäßig validiert; für lokal selbstsignierte Zertifikate kann `OBSIDIAN_VERIFY_TLS=false` gesetzt werden. Keine Secrets in Repo-Dateien ablegen.
+
+MCP-Client-Konfiguration (Beispiel):
+
+```json
+{
+  "mcpServers": {
+    "obsidian": {
+      "command": "/absoluter/pfad/zu/uv",
+      "args": ["--directory", "/absoluter/pfad/zu/obsidian-mcp-server", "run", "obsidian-mcp-server"],
+      "env": {
+        "OBSIDIAN_API_URL": "https://127.0.0.1:27124",
+        "OBSIDIAN_API_KEY": "<dein-plugin-api-key>"
+      }
+    }
+  }
+}
+```
+
+## Sicherheit
+
+Schreiboperationen verlangen `OBSIDIAN_ENABLE_WRITES=true`; ansonsten arbeitet der Server schreibgeschützt. `OBSIDIAN_ENABLE_DELETE=true` schaltet endgültiges Löschen separat frei. Der Server begrenzt Ergebnisse und Inhalt, weist unsichere Pfade ab und protokolliert keine API-Key-Werte. Er bindet selbst keinen Netzwerk-Port.
+
+## Entwicklung
+
+```sh
+uv sync --all-groups
+uv run pytest
+uv run ruff check .
+```
+
+Siehe `IMPLEMENTATION.md` für Tool-Inventar, Produktverträge und Umsetzungsumfang. Live-Integrationstests setzen ein erreichbares Obsidian-Plugin und gültige Zugangsdaten voraus; die Standardtests verwenden isolierte Testdaten.

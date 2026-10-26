@@ -1,0 +1,45 @@
+[project]
+name = "obsidian-mcp-server"
+version = "0.1.0"
+description = "Python MCP server for Obsidian with filesystem and Local REST API backends"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "httpx>=0.28,<0.29",
+    "mcp==2.3.0",
+    "PyYAML>=6.0,<7",
+]
+
+[dependency-groups]
+dev = [
+    "pip-audit>=2.9,<3",
+    "pyright>=1.1.414",
+    "pytest>=9.0.3,<10",
+    "pytest-asyncio>=0.24,<2",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.9,<1",
+]
+
+[project.scripts]
+obsidian-mcp-server = "obsidian_mcp_server.server:main"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+addopts = [
+    "--cov=obsidian_mcp_server",
+    "--cov-branch",
+    "--cov-report=term-missing",
+    "--cov-fail-under=100",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.uv]
+package = true

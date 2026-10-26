@@ -1,0 +1,2 @@
+[console_scripts]
+obsidian-mcp-server = obsidian_mcp_server.server:main
